@@ -20,32 +20,31 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 2,
   },
-  content: {
+  flexRow: {
     flexDirection: "row",
   },
   spaceBetween: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   button: {
+    flexGrow: 0,
     backgroundColor: theme.colors.primary,
     color: theme.colors.white,
-    width: "fit-content",
     padding: 4,
     borderRadius: 4,
   },
   summary: {
     flexDirection: "row",
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
   },
   summaryItem: {
-    padding: 10
+    padding: 10,
   },
 });
 
 const SummaryItem = ({ item }) => {
-
   const parseValue = (value) => {
-    if(value > 1000) {
+    if (value > 1000) {
       return `${(value / 1000).toFixed(1)} k`;
     }
     return value;
@@ -69,19 +68,26 @@ const RepositoryListItem = ({ item }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Image source={item.ownerAvatarUrl} style={styles.avatar} />
+      <View style={styles.flexRow}>
+        <Image source={{ uri: item.ownerAvatarUrl }} style={styles.avatar} />
         <View style={styles.spaceBetween}>
           <Text fontSize="subheading" fontWeight="bold">
             {item.fullName}
           </Text>
           <Text color="textSecondary">{item.description}</Text>
-          <TouchableWithoutFeedback>
-            <Text style={styles.button}>{item.language}</Text>
-          </TouchableWithoutFeedback>
+          <View style={styles.flexRow}>
+            <TouchableWithoutFeedback>
+              <Text style={styles.button}>{item.language}</Text>
+            </TouchableWithoutFeedback>
+          </View>
         </View>
       </View>
-      <FlatList style={styles.summary} data={summary} renderItem={SummaryItem}></FlatList>
+      <FlatList
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.summary}
+        data={summary}
+        renderItem={SummaryItem}
+      ></FlatList>
     </View>
   );
 };
