@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
   tab: {
-    color: theme.colors.contrastText,
+    color: theme.colors.white,
     fontSize: 24,
     padding: 15
   },
