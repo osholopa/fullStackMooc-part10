@@ -1,6 +1,7 @@
 import React from "react";
 import { View, TouchableWithoutFeedback, StyleSheet } from "react-native";
 import { Formik } from "formik";
+import * as yup from "yup";
 
 import theme from "../theme";
 import Text from "./Text";
@@ -14,8 +15,6 @@ const styles = StyleSheet.create({
     padding: 15,
     margin: 15,
     borderRadius: 4,
-    borderWidth: 1,
-    borderColor: theme.colors.textSecondary,
   },
   submitBtn: {
     backgroundColor: theme.colors.primary,
@@ -55,6 +54,11 @@ const initialValues = {
   password: "",
 };
 
+const validationSchema = yup.object().shape({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+});
+
 const SignIn = () => {
   const onSubmit = (values) => {
     console.log(values);
@@ -62,7 +66,11 @@ const SignIn = () => {
 
   return (
     <View>
-      <Formik initialValues={initialValues} onSubmit={onSubmit}>
+      <Formik
+        validationSchema={validationSchema}
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+      >
         {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
       </Formik>
     </View>
