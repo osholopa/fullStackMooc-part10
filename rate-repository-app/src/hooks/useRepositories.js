@@ -10,23 +10,16 @@ const useRepositories = () => {
     fetchPolicy: "cache-and-network",
   });
 
-  const fetchRepositories = () => {
+  useEffect(() => {
     if(error) {
       console.log(error);
     }
-
-    if(data && !loading) {
-      console.log(data.repositories);
-      const json = data.repositories;
-      setRepositories(json);
+    if(!loading) {
+      setRepositories(data.repositories);
     }
-  };
+  }, [data]);
 
-  useEffect(() => {
-    fetchRepositories();
-  }, []);
-
-  return { repositories, loading, refetch: fetchRepositories };
+  return { repositories, loading };
 };
 
 export default useRepositories;
