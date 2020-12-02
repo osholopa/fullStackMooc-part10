@@ -14,7 +14,7 @@ const useRepositories = () => {
     if(error) {
       console.log(error);
     }
-    if(!loading) {
+    if(!loading && data) {
       setRepositories(data.repositories);
     }
   }, [data]);
