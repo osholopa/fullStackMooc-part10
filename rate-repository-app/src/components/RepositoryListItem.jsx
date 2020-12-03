@@ -53,7 +53,7 @@ const SummaryItem = ({ item }) => {
   return (
     <View style={styles.summaryItem}>
       <Text color="textSecondary">{item.label}</Text>
-      <Text>{parseValue(item.value)}</Text>
+      <Text testID="summaryItemValue">{parseValue(item.value)}</Text>
     </View>
   );
 };
@@ -69,15 +69,15 @@ const RepositoryListItem = ({ item }) => {
   return (
     <View style={styles.container}>
       <View style={styles.flexRow}>
-        <Image source={{ uri: item.ownerAvatarUrl }} style={styles.avatar} />
+        <Image testID="repositoryAvatar" source={{ uri: item.ownerAvatarUrl }} style={styles.avatar} />
         <View style={styles.spaceBetween}>
-          <Text fontSize="subheading" fontWeight="bold">
+          <Text testID="repositoryFullName" fontSize="subheading" fontWeight="bold">
             {item.fullName}
           </Text>
-          <Text color="textSecondary">{item.description}</Text>
+          <Text testID="repositoryDescription" color="textSecondary">{item.description}</Text>
           <View style={styles.flexRow}>
             <TouchableWithoutFeedback>
-              <Text style={styles.button}>{item.language}</Text>
+              <Text testID="repositoryLang" style={styles.button}>{item.language}</Text>
             </TouchableWithoutFeedback>
           </View>
         </View>
