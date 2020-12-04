@@ -31,14 +31,16 @@ const SignInForm = ({ onSubmit }) => {
         style={styles.formController}
         name="username"
         placeholder="Username"
+        testID="usernameField"
       />
       <FormikTextInput
         style={styles.formController}
         secureTextEntry
         name="password"
         placeholder="Password"
+        testID="passwordField"
       />
-      <TouchableWithoutFeedback onPress={onSubmit}>
+      <TouchableWithoutFeedback testID="signInBtn" onPress={onSubmit}>
         <Text
           fontWeight="bold"
           style={[styles.formController, styles.submitBtn]}
@@ -60,14 +62,7 @@ const validationSchema = yup.object().shape({
   password: yup.string().required("Password is required"),
 });
 
-const SignIn = () => {
-  const [signIn] = useSignIn();
-
-  const onSubmit = async (values) => {
-    const { username, password } = values;
-    await signIn({ username, password });
-  };
-
+export const SignInContainer = ({ onSubmit }) => {
   return (
     <View>
       <Formik
@@ -79,6 +74,17 @@ const SignIn = () => {
       </Formik>
     </View>
   );
+};
+
+const SignIn = () => {
+  const [signIn] = useSignIn();
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    await signIn({ username, password });
+  };
+
+  return <SignInContainer onSubmit={onSubmit} />;
 };
 
 export default SignIn;
