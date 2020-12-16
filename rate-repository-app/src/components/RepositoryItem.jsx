@@ -120,7 +120,7 @@ const RepositoryItem = ({ item, single }) => {
         </View>
         <FlatList
           keyExtractor={(item, index) => index.toString()}
-          style={!single ? styles.summary : null}
+          style={styles.summary}
           contentContainerStyle={styles.summary}
           data={summary}
           renderItem={SummaryItem}
