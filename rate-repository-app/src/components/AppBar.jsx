@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -30,33 +30,49 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = ({ title }) => {
-  const { data } = useQuery(AUTHORIZED_USER);
+  const { data, loading } = useQuery(AUTHORIZED_USER, {
+    fetchPolicy: "cache-and-network",
+  });
+  const [loggedIn, setLoggedin] = useState(false);
   const authStorage = useContext(AuthStorageContext);
   const apolloClient = useApolloClient();
+
+  useEffect(() => {
+    if (data) {
+      data.authorizedUser && setLoggedin(true);
+    }
+  }, [loading]);
 
   const signOut = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
+    setLoggedin(false);
   };
-
-  const isLoggedIn = data ? data.authorizedUser : false;
 
   return (
     <View style={styles.container}>
-      <ScrollView horizontal>
-        <Link to="/">
-          <Text style={styles.tab}>{title}</Text>
-        </Link>
-        {isLoggedIn ? (
+      {loggedIn ? (
+        <ScrollView horizontal>
+          <Link to="/">
+            <Text style={styles.tab}>{title}</Text>
+          </Link>
+          <Link to="/review">
+            <Text style={styles.tab}>Create a review</Text>
+          </Link>
           <TouchableOpacity onPress={signOut}>
             <Text style={styles.tab}>Sign out</Text>
           </TouchableOpacity>
-        ) : (
+        </ScrollView>
+      ) : (
+        <ScrollView horizontal>
+          <Link to="/">
+            <Text style={styles.tab}>{title}</Text>
+          </Link>
           <Link to="/signin">
             <Text style={styles.tab}>Sign in</Text>
           </Link>
-        )}
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 };
