@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, View, StyleSheet } from "react-native";
+import { Searchbar } from "react-native-paper";
 import RepositoryItem from "./RepositoryItem";
 import useRepositories from "../hooks/useRepositories";
 import SortPrinciple from "./SortPrinciple";
+import { useDebounce } from "use-debounce";
 
 const styles = StyleSheet.create({
   separator: {
@@ -12,30 +14,59 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({
-  repositories,
-  sortPrinciple,
-  setSortPrinciple,
-}) => {
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
-    : [];
+const RepositoryListHeader = (props) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [value] = useDebounce(searchQuery, 500);
 
-  const sortPrincipleProps = {
-    sortPrinciple: sortPrinciple,
-    setSortPrinciple: setSortPrinciple,
-  };
+  useEffect(() => {
+    if (value) {
+      props.setSortPrinciple(value);
+    } else {
+      props.setSortPrinciple("latest");
+    }
+  }, [value]);
+
+  const onChangeSearch = (query) => setSearchQuery(query);
 
   return (
-    <FlatList
-      keyExtractor={(item, index) => index.toString()}
-      data={repositoryNodes}
-      ListHeaderComponent={<SortPrinciple {...sortPrincipleProps} />}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => <RepositoryItem single={false} item={item} />}
-    />
+    <View>
+      <Searchbar
+        placeholder="Search"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+      />
+      <SortPrinciple {...props} />
+    </View>
   );
 };
+
+export class RepositoryListContainer extends React.Component {
+  renderHeader = () => {
+    const props = this.props;
+    return (
+      <RepositoryListHeader
+        sortPrinciple={props.sortPrinciple}
+        setSortPrinciple={props.setSortPrinciple}
+      />
+    );
+  };
+
+  render() {
+    return (
+      <FlatList
+        keyExtractor={(item, index) => index.toString()}
+        data={
+          this.props.repositories
+            ? this.props.repositories.edges.map((edge) => edge.node)
+            : []
+        }
+        ListHeaderComponent={this.renderHeader}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={({ item }) => <RepositoryItem single={false} item={item} />}
+      />
+    );
+  }
+}
 
 const RepositoryList = () => {
   const [sortPrinciple, setSortPrinciple] = useState("latest");

@@ -3,7 +3,7 @@ import RNPickerSelect from "react-native-picker-select";
 
 const SortPrinciple = ({ sortPrinciple, setSortPrinciple }) => {
   const handleValueChange = (value) => {
-    if (value !== sortPrinciple) {
+    if (value && value !== sortPrinciple) {
       setSortPrinciple(value);
     }
   };

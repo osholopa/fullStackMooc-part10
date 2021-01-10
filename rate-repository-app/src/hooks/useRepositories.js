@@ -4,7 +4,7 @@ import { GET_REPOSITORIES } from "../graphql/queries";
 
 const useRepositories = (sortPrinciple) => {
   let variables = null;
-
+  
   switch (sortPrinciple) {
     case "highest":
       variables = {
@@ -18,8 +18,11 @@ const useRepositories = (sortPrinciple) => {
         orderDirection: "ASC",
       };
       break;
-    default:
+    case "latest":
       variables = { orderBy: "CREATED_AT" };
+      break;
+    default:
+      variables = { searchKeyword: sortPrinciple ? sortPrinciple : "" };
       break;
   }
 
