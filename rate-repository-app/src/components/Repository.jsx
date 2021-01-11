@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: "column",
   },
-  reviewer: {
+  reviewTitle: {
     fontWeight: "bold",
   },
   date: {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ItemSeparator = () => <View style={styles.separator} />;
+export const ItemSeparator = () => <View style={styles.separator} />;
 
 const ListHeader = ({ repository }) => {
   return (
@@ -57,12 +57,16 @@ const ListHeader = ({ repository }) => {
   );
 };
 
-const ReviewItem = ({ review }) => {
+export const ReviewItem = ({ review, isMyReview }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.rating}>{review.rating}</Text>
       <View style={styles.details}>
-        <Text style={styles.reviewer}>{review.user.username}</Text>
+        {isMyReview ? (
+          <Text style={styles.reviewTitle}>{review.repository.fullName}</Text>
+        ) : (
+          <Text style={styles.reviewTitle}>{review.user.username}</Text>
+        )}
         <Text style={styles.date}>
           {format(new Date(review.createdAt), "dd.MM.yyyy")}
         </Text>
@@ -96,7 +100,7 @@ const Repository = () => {
       ItemSeparatorComponent={ItemSeparator}
       onEndReached={onEndReach}
       onEndReachedThreshold={0.5}
-      renderItem={({ item }) => <ReviewItem review={item} />}
+      renderItem={({ item }) => <ReviewItem withUser review={item} />}
       keyExtractor={({ id }) => id}
       ListHeaderComponent={() => <ListHeader repository={repository} />}
     />

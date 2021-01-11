@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Constants from "expo-constants";
-import { Link } from "react-router-native";
+import { Link, useHistory } from "react-router-native";
 import theme from "../theme";
 
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
@@ -36,6 +36,7 @@ const AppBar = ({ title }) => {
   const [loggedIn, setLoggedin] = useState(false);
   const authStorage = useContext(AuthStorageContext);
   const apolloClient = useApolloClient();
+  const history = useHistory();
 
   useEffect(() => {
     if (data) {
@@ -46,6 +47,7 @@ const AppBar = ({ title }) => {
   const signOut = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
+    history.push("/");
     setLoggedin(false);
   };
 
@@ -58,6 +60,9 @@ const AppBar = ({ title }) => {
           </Link>
           <Link to="/review">
             <Text style={styles.tab}>Create a review</Text>
+          </Link>
+          <Link to="/my-reviews">
+            <Text style={styles.tab}>My reviews</Text>
           </Link>
           <TouchableOpacity onPress={signOut}>
             <Text style={styles.tab}>Sign out</Text>
