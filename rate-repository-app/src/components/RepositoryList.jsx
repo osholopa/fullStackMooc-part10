@@ -61,6 +61,8 @@ export class RepositoryListContainer extends React.Component {
             : []
         }
         ListHeaderComponent={this.renderHeader}
+        onEndReached={this.props.onEndReach}
+        onEndReachedThreshold={0.5}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({ item }) => <RepositoryItem single={false} item={item} />}
       />
@@ -70,13 +72,18 @@ export class RepositoryListContainer extends React.Component {
 
 const RepositoryList = () => {
   const [sortPrinciple, setSortPrinciple] = useState("latest");
-  const { repositories } = useRepositories(sortPrinciple);
+  const { repositories, fetchMore } = useRepositories(sortPrinciple);
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   return (
     <RepositoryListContainer
       sortPrinciple={sortPrinciple}
       setSortPrinciple={setSortPrinciple}
       repositories={repositories}
+      onEndReach={onEndReach}
     />
   );
 };
